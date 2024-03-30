@@ -1,5 +1,6 @@
 import React, { createContext, forwardRef, useContext, useEffect, useState } from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { Droppable, Draggable } from './dnd';
+// import { Droppable, Draggable } from 'react-beautiful-dnd'
 
 
 export const InputTip = ({ msg }) => {
@@ -40,6 +41,7 @@ export const Dragger = ({ children, id, index, type, anitmation, isDragOutId }) 
 
 	return <Draggable draggableId={id} index={index}>
 		{(provided, snapshot) => {
+
 			return (
 				<>
 					<DragElement
@@ -55,13 +57,13 @@ export const Dragger = ({ children, id, index, type, anitmation, isDragOutId }) 
 							onClick?.(id, type);
 						}}
 					>{children}</DragElement>
-					{
+					{/* {
 						snapshot.isDragging && !anitmation && (
 							<DragElement data-type={type} className='-copy'>
 								{children}
 							</DragElement>
 						)
-					}
+					} */}
 				</>
 			);
 		}}
@@ -69,6 +71,12 @@ export const Dragger = ({ children, id, index, type, anitmation, isDragOutId }) 
 };
 
 export const Dropper = ({ data = [], onClick, isDragOutId, children, id, anitmation = false, onDrag, isDropDisabled, ...props }) => {
+  // const [key, setKey] = useState(1)
+  // useEffect(() => {
+  //   setKey(i => i + 1)
+  // }, [data])
+
+  // console.log(key)
 
 	return <Droppable
 		direction='horizontal'
@@ -83,9 +91,10 @@ export const Dropper = ({ data = [], onClick, isDragOutId, children, id, anitmat
 						className='items'
 						ref={provided.innerRef}
 						{...provided.droppableProps}
-						style={{
-							cursor: snapshot.isDraggingOver ? 'copy' : ''
-						}}
+            // key={key}
+						// style={{
+						// 	cursor: snapshot.isDraggingOver ? 'copy' : ''
+						// }}
 					>
 						{
 							data.map((item, index) => {
@@ -104,13 +113,13 @@ export const Dropper = ({ data = [], onClick, isDragOutId, children, id, anitmat
 								);
 							})
 						}
-						{
+						{/* {
 							anitmation ? provided.placeholder : (
 								<div style={{ position: 'absolute' }}>
 									{provided.placeholder}
 								</div>
 							)
-						}
+						} */}
 						{children}
 					</div>
 				</ClickContext.Provider>
@@ -121,13 +130,8 @@ export const Dropper = ({ data = [], onClick, isDragOutId, children, id, anitmat
 };
 
 export const DropBoard = ({ title, value, id, setValue, onDragList, isDragOutId, currentDragList, tip }) => {
-	const onDrag = onDragList === id;
+	const onDrag = currentDragList === id;
 	const isDropDisabled = !!(currentDragList && currentDragList !== id);
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
 
 	return (
 		<div className={"form-group formula"}>
@@ -146,9 +150,9 @@ export const DropBoard = ({ title, value, id, setValue, onDragList, isDragOutId,
 				>
 					{
 						value.length ? (
-							<div className="clear" onClick={()=> setValue([])}>清除全部</div>
+							<div className="clear" onClick={()=> setValue([])}>clear all</div>
 						) : (
-							<div style={{ width: '100%', padding: '16px' }}>no info</div>
+							<div style={{ width: '100%', padding: '16px' }}>drag here</div>
 						)
 					}
 				</Dropper>

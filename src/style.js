@@ -38,12 +38,12 @@ export const ConfigWrapper = styled.div`
 	}
 
 	.items .drag-box[data-type=standardField]{
-		border: solid 0.5px #0069c2;
+		/* border: solid 0.5px #0069c2; */
 		background-color: #f2f8ff;
 		color: #0069c2;
 	}
 	.items .drag-box[data-type=formField]{
-		border: solid 0.5px #70be20;
+		/* border: solid 0.5px #70be20; */
 		background-color: #e9f6dc;
 		color: #509609;
 	}

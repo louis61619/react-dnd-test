@@ -1,5 +1,6 @@
 import React, { createContext, forwardRef, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useState } from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+// import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from './dnd';
 import { ConfigWrapper } from './style';
 import { Dragger, DropBoard, Dropper } from './common';
 import styled from '@emotion/styled';
@@ -67,12 +68,12 @@ export const SummaryConfig = forwardRef(({
 
 	return (
 		<DragDropContext
-			onBeforeCapture={(beforeCapture) => {
-				const listName = beforeCapture.draggableId.match(/\[([^\]]+)\]/)[1].split('-')[0];
-				if (values[listName]) {
-					setOnDragList(listName);
-				}
-			}}
+			// onBeforeCapture={(beforeCapture) => {
+			// 	const listName = beforeCapture.draggableId.match(/\[([^\]]+)\]/)[1].split('-')[0];
+			// 	if (values[listName]) {
+			// 		setOnDragList(listName);
+			// 	}
+			// }}
       // onBeforeCapture={(start) => {
       //   const listName = start.draggableId.match(/\[([^\]]+)\]/)[1].split('-')[0];
 			// 	if (values[listName]) {
@@ -86,15 +87,15 @@ export const SummaryConfig = forwardRef(({
 					setCurrentDragList(listName);
 				}
 			}}
-			onDragUpdate={(update, provided) => {
-				const { source, draggableId } = update;
-				// 往外拖曳並關閉動畫
-				if (source.droppableId && !source.destination) {
-					setIsDragOutId(draggableId);
-				} else {
-					setIsDragOutId(null);
-				}
-			}}
+			// onDragUpdate={(update, provided) => {
+			// 	const { source, draggableId } = update;
+			// 	// 往外拖曳並關閉動畫
+			// 	if (source.droppableId && !source.destination) {
+			// 		setIsDragOutId(draggableId);
+			// 	} else {
+			// 		setIsDragOutId(null);
+			// 	}
+			// }}
 			onDragEnd={(result) => {
 				const { source, destination, draggableId } = result;
 
@@ -110,13 +111,14 @@ export const SummaryConfig = forwardRef(({
 				setCurrentDragList(null);
 
 				if (!destination) return;
-
+        
 				if (destination.droppableId && destination.droppableId.slice(-7) !== 'remover') {
+          
 					const newList = [...values[destination.droppableId]];
 					const currentId = draggableId.split(']')[1];
 
 					if (source.droppableId !== destination.droppableId) {
-						const name = dataMap[source.droppableId].find(x => x.value.toString() === currentId).name;
+						const name = dataMap[source.droppableId]?.find(x => x.value.toString() === currentId)?.name;
 						// 外部插入
 						newList.splice(destination.index, 0, {
 							name,
@@ -141,7 +143,7 @@ export const SummaryConfig = forwardRef(({
 		>
 			<ConfigWrapper className='form-horizontal'>
 				<div className='form-group -fields'>
-					<label className='control-label col-xs-3'>標準欄位</label>
+					{/* <label className='control-label col-xs-3'>標準欄位</label> */}
 					<div className="col-xs-18">
 						<Dropper data={dataMap.standardField} id='standardField' isDropDisabled={true}>
 							{
@@ -151,7 +153,7 @@ export const SummaryConfig = forwardRef(({
 					</div>
 				</div>
 				<div className="form-group -fields">
-					<label className='control-label col-xs-3'>表單欄位</label>
+					{/* <label className='control-label col-xs-3'>表單欄位</label> */}
 					<div className="col-xs-18">
 						<Dropper data={dataMap.formField} id='formField' isDropDisabled={true}>
 							{
@@ -163,13 +165,6 @@ export const SummaryConfig = forwardRef(({
 				<div className='divider'></div>
 				<DropBoard
 					id='stickySummary'
-					title='表單簽核列表的摘要資訊'
-					tip={(
-						<PopoverWrapper>
-							<div className='-txt'>可設定表單簽核列表的「摘要資訊」。譬如若設定【數值計算】，則呈現如下圖所示。</div>
-							<img src="img/custom-form/fix-summary-popover.png" alt="popover" />
-						</PopoverWrapper>
-					)}
 					value={values.stickySummary}
 					setValue={(v) => {
 						setLists(v, 'stickySummary');
@@ -181,13 +176,6 @@ export const SummaryConfig = forwardRef(({
 				/>
 				<DropBoard
 					id='floatSummary'
-					title='浮動式摘要'
-					tip={(
-						<PopoverWrapper>
-							<div className='-txt'>可設定「浮動式摘要」。譬如若由上而下設定【申請人】【部門名稱】【數值計算】，則呈現如下圖所示。</div>
-							<img src="img/custom-form/float-summary-popover.png" alt="popover" />
-						</PopoverWrapper>
-					)}
 					value={values.floatSummary}
 					setValue={(v) => {
 						setLists(v, 'floatSummary');
